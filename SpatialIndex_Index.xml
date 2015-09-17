@@ -90,7 +90,9 @@ This method is invoked when an existing instance of a class is updated.</Descrip
 <ClassMethod>1</ClassMethod>
 <FormalSpec>className:%String,indexName:%String</FormalSpec>
 <ReturnType>%String</ReturnType>
-<Implementation><![CDATA[	quit $Name(^TestGlobal(className, indexName))
+<Implementation><![CDATA[
+	set storage = ##class(%Dictionary.ClassDefinition).%OpenId(className).Storages.GetAt(1).IndexLocation
+	quit $Name(@storage@(indexName))
 ]]></Implementation>
 </Method>
 </Class>
