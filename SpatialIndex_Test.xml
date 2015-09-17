@@ -54,6 +54,8 @@
 <IndexLocation>^SpatialIndex.TestI</IndexLocation>
 <StreamLocation>^SpatialIndex.TestS</StreamLocation>
 <Data name="TestDefaultData">
+<Structure>listnode</Structure>
+<Subscript/>
 <Value name="1">
 <Value>%%CLASSNAME</Value>
 </Value>
@@ -61,15 +63,9 @@
 <Value>Name</Value>
 </Value>
 <Value name="3">
-<Value>X</Value>
-</Value>
-<Value name="4">
-<Value>Y</Value>
-</Value>
-<Value name="5">
 <Value>Latitude</Value>
 </Value>
-<Value name="6">
+<Value name="4">
 <Value>Longitude</Value>
 </Value>
 </Data>

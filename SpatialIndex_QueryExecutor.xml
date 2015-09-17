@@ -27,7 +27,7 @@
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
 	set index = $i(qHandle("index"))
-	set AtEnd = index>=qHandle("data")
+	set AtEnd = index>=$G(qHandle("data"))
 	set Row = $lb(qHandle("data", index))
 	return $$$OK
 ]]></Implementation>

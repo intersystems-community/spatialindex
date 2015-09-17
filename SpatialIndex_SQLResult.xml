@@ -20,15 +20,31 @@
 </Method>
 
 <Method name="PrepareFind">
-<FormalSpec>rect:%Binary</FormalSpec>
+<FormalSpec>indexGlobal:%String,queryType:%String,queryParams:%Binary</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
-	set str = ""
-	set $BIT(str,10 + 1) = 1
-	set $BIT(str,15 + 1) = 1
-	set $BIT(str,17 + 1) = 1
-	set i%ResultBits = 1
-	set i%ResultBits(1) = str
+	//for now we only have queryType = window
+	for i = 1:1:4 {
+		set item = $Piece(queryParams, ",", i)
+		set param = $Piece(item, "=", 1)
+		set value = $Piece(item, "=" ,2)
+		if param = "minx" {
+			set minx = value
+		} elseif param = "maxx" {
+			set maxx = value
+		} elseif param = "maxy"{
+			set maxy = value
+		} elseif param = "miny" {
+			set miny = value
+		}
+	}
+	set rset = ##class(%ResultSet).%New("SpatialIndex.QueryExecutor:FindWindow")
+ 	do rset.Execute(indexGlobal,minx,miny,maxx,maxy)
+ 	while (rset.Next()){
+	 	set id = rset.Get("Id")
+	 	set tChunk = (id\64000)+1, tPos=(id#64000)+1
+	 	set $BIT(i%ResultBits(tChunk),tPos) = 1
+	}
 	quit $$$OK
 ]]></Implementation>
 </Method>
@@ -38,14 +54,14 @@
 <ReturnType>%Boolean</ReturnType>
 <Implementation><![CDATA[
 	set tChunk = (pItem\64000)+1, tPos=(pItem#64000)+1
-	quit $bit($g(i%ResultBits(tChunk)),tPos)
+	quit $bit($get(i%ResultBits(tChunk)),tPos)
 ]]></Implementation>
 </Method>
 
 <Method name="GetChunk">
 <FormalSpec>pChunk:%Integer</FormalSpec>
 <ReturnType>%Binary</ReturnType>
-<Implementation><![CDATA[	quit $g(i%ResultBits(pChunk))
+<Implementation><![CDATA[	quit $get(i%ResultBits(pChunk))
 ]]></Implementation>
 </Method>
 
