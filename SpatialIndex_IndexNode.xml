@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2015.3 (Build 215U)" ts="2015-09-18 03:21:40">
+<Export generator="Cache" version="25">
 <Class name="SpatialIndex.IndexNode">
 <Super>%RegisteredObject</Super>
-<TimeChanged>63813,11306.782214</TimeChanged>
-<TimeCreated>63813,4798.778276</TimeCreated>
+<TimeCreated>63812,85902.903995</TimeCreated>
 
 <Property name="isLeaf">
 <Type>%Boolean</Type>
@@ -33,13 +32,13 @@
 <FormalSpec>minX,minY,maxX,maxY,isLeaf=$$$YES,size=0</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
- set ..isLeaf = isLeaf
- set ..minX = minX
- set ..maxX = maxX
- set ..minY = minY
- set ..maxY = maxY
- set i%size = size
- Quit $$$OK
+	set ..isLeaf = isLeaf
+	set ..minX = minX
+	set ..maxX = maxX
+	set ..minY = minY
+	set ..maxY = maxY
+	set ..size = size
+	Quit $$$OK
 ]]></Implementation>
 </Method>
 
@@ -47,7 +46,7 @@
 <ClassMethod>1</ClassMethod>
 <FormalSpec>indexGlobal:%String,nodePath:%String</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
-<Implementation><![CDATA[ return $DATA(@indexGlobal@(nodePath))>0
+<Implementation><![CDATA[	return $DATA(@indexGlobal@(nodePath))>0
 ]]></Implementation>
 </Method>
 

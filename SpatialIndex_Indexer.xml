@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2015.3 (Build 215U)" ts="2015-09-18 03:21:40">
+<Export generator="Cache" version="25">
 <Class name="SpatialIndex.Indexer">
 <Super>%RegisteredObject</Super>
-<TimeChanged>63813,10285.724655</TimeChanged>
-<TimeCreated>63813,4756.736455</TimeCreated>
+<TimeCreated>63812,81607.191685</TimeCreated>
 
 <Parameter name="NODESIZE">
 <Default>4</Default>
@@ -33,43 +32,53 @@
 <Expression>90 + ..#EPS</Expression>
 </Parameter>
 
-<Property name="indexPath">
+<Property name="indexGlobal">
 <Type>%String</Type>
 <Private>1</Private>
 </Property>
 
 <Method name="%OnNew">
-<FormalSpec>indexPath:%String</FormalSpec>
+<FormalSpec>indexGlobal:%String</FormalSpec>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
- set ..indexPath = indexPath
- if ('##class(IndexNode).Exists(indexPath, ..#ROOTNODE)){
-  do ##class(IndexNode).Put(indexPath, ..#ROOTNODE,
-   {"isLeaf":$$$YES, "minX":..#MINX, "maxX":..#MAXX, "minY":..#MINY, "maxY":..#MAXY, "size":0})
- }
- return $$$OK
+	set ..indexGlobal = indexGlobal
+	if ('##class(IndexNode).Exists(indexGlobal, ..#ROOTNODE)){
+		do ##class(IndexNode).Put(indexGlobal, ..#ROOTNODE,
+			{"isLeaf":$$$YES, "minX":..#MINX, "maxX":..#MAXX, "minY":..#MINY, "maxY":..#MAXY, "size":0})
+	}
+	return $$$OK
 ]]></Implementation>
 </Method>
 
 <Method name="Insert">
 <FormalSpec>x:%Float,y:%Float,id:%String,data:%String="",block:%String=..#ROOTNODE</FormalSpec>
 <Implementation><![CDATA[
- #dim node As IndexNode
- set node = ##class(IndexNode).Get(..indexPath, block)
- if ((x<node.minX) || (x>=node.maxX) || (y<node.minY) || (y>=node.maxY)) return
- if (node.isLeaf){
-  if ('..Contains(x, y, block)) {
-   set node.size = node.size + 1
-   do ##class(IndexNode).Put(..indexPath, block, node)
-  }
-  set @..indexPath@(block, "data", x, y, id) = data
-  if (node.size > ..#NODESIZE) do ..Split(block)
- }
- else{
-  for i=0:1:3 {
-   do ..Insert(x, y, id, data, block_i)
-  }
- }
+	#dim node As IndexNode
+	set node = ##class(IndexNode).Get(..indexGlobal, block)
+	if ('..IsInside(x, y, block)) return
+	if (node.isLeaf){
+		if ('..Contains(x, y, block)) {
+			set node.size = node.size + 1
+			do ##class(IndexNode).Put(..indexGlobal, block, node)
+		}
+		set @..indexGlobal@(block, "data", x, y, id) = data
+		if (node.size > ..#NODESIZE) do ..Split(block)
+	}
+	else{
+		for i=0:1:3 {
+			do ..Insert(x, y, id, data, block_i)
+		}
+	}
+]]></Implementation>
+</Method>
+
+<Method name="IsInside">
+<FormalSpec>x:%Float,y:%Float,block:%String</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	#dim node As IndexNode
+	set node = ##class(IndexNode).Get(..indexGlobal, block)
+	return (x>=node.minX) && (x<node.maxX) && (y>=node.minY) && (y<node.maxY)
 ]]></Implementation>
 </Method>
 
@@ -77,56 +86,56 @@
 <FormalSpec>x:%Float,y:%Float,block:%String=..#ROOTNODE</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
 <Implementation><![CDATA[
- #dim node As IndexNode
- set node = ##class(IndexNode).Get(..indexPath, block)
- if ((x<node.minX) || (x>=node.maxX) || (y<node.minY) || (y>=node.maxY)) return $$$NO
- if (node.isLeaf){
-  return $DATA(@..indexPath@(block, "data", x, y))>0
- }
- for i=0:1:3 {
-  if (..Contains(x, y, block_i)) return $$$YES
- }
- return $$$NO
+	#dim node As IndexNode
+	set node = ##class(IndexNode).Get(..indexGlobal, block)
+	if ('..IsInside(x, y, block)) return $$$NO
+	if (node.isLeaf){
+		return $DATA(@..indexGlobal@(block, "data", x, y))>0
+	}
+	for i=0:1:3 {
+		if (..Contains(x, y, block_i)) return $$$YES
+	}
+	return $$$NO
 ]]></Implementation>
 </Method>
 
 <Method name="Split">
 <FormalSpec>block:%String</FormalSpec>
 <Implementation><![CDATA[
- #dim node As IndexNode
- set node = ##class(IndexNode).Get(..indexPath, block)
- set midX = (node.minX+node.maxX)/2
- set midY = (node.minY+node.maxY)/2
- 
- // Create subnodes
- set nodes(0) = ##class(IndexNode).%New(node.minX, node.minY, midX, midY)
- set nodes(1) = ##class(IndexNode).%New(midX, node.minY, node.maxX, midY)
- set nodes(2) = ##class(IndexNode).%New(node.minX, midY, midX, node.maxY)
- set nodes(3) = ##class(IndexNode).%New(midX, midY, node.maxX, node.maxY)
- 
- // Saving structure
- set node.isLeaf = $$$NO
- set node.size = 0
- do ##class(IndexNode).Put(..indexPath, block, node)
- for i=0:1:3 {
-  do ##class(IndexNode).Put(..indexPath, block_i, nodes(i))
- }
- 
- // Reinsert data into node. Since it's not leaf, data will be inserted in subnodes
- set x = $o(@..indexPath@(block, "data", ""))
- while (x'=""){
-  set y = $o(@..indexPath@(block, "data", x, ""))
-  while (y'=""){
-   set id = $o(@..indexPath@(block, "data", x, y, ""))
-   while (id'=""){
-    do ..Insert(x, y, id, @..indexPath@(block, "data", x, y, id), block)
-    set id = $o(@..indexPath@(block, "data", x, y, id))
-   }
-   set y = $o(@..indexPath@(block, "data", x, y))
-  }
-  set x = $o(@..indexPath@(block, "data", x))
- }
- kill @..indexPath@(block, "data")
+	#dim node As IndexNode
+	set node = ##class(IndexNode).Get(..indexGlobal, block)
+	set midX = (node.minX+node.maxX)/2
+	set midY = (node.minY+node.maxY)/2
+	
+	// Create subnodes
+	set nodes(0) = ##class(IndexNode).%New(node.minX, node.minY, midX, midY)
+	set nodes(1) = ##class(IndexNode).%New(midX, node.minY, node.maxX, midY)
+	set nodes(2) = ##class(IndexNode).%New(node.minX, midY, midX, node.maxY)
+	set nodes(3) = ##class(IndexNode).%New(midX, midY, node.maxX, node.maxY)
+	
+	// Saving structure
+	set node.isLeaf = $$$NO
+	set node.size = 0
+	do ##class(IndexNode).Put(..indexGlobal, block, node)
+	for i=0:1:3 {
+		do ##class(IndexNode).Put(..indexGlobal, block_i, nodes(i))
+	}
+	
+	// Reinsert data into node. Since it's not leaf, data will be inserted in subnodes
+	set x = $o(@..indexGlobal@(block, "data", ""))
+	while (x'=""){
+		set y = $o(@..indexGlobal@(block, "data", x, ""))
+		while (y'=""){
+			set id = $o(@..indexGlobal@(block, "data", x, y, ""))
+			while (id'=""){
+				do ..Insert(x, y, id, @..indexGlobal@(block, "data", x, y, id), block)
+				set id = $o(@..indexGlobal@(block, "data", x, y, id))
+			}
+			set y = $o(@..indexGlobal@(block, "data", x, y))
+		}
+		set x = $o(@..indexGlobal@(block, "data", x))
+	}
+	kill @..indexGlobal@(block, "data")
 ]]></Implementation>
 </Method>
 </Class>

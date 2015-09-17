@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SpatialIndex.QueryExecutor">
+<Super>%RegisteredObject</Super>
+<TimeCreated>63813,4634.48669</TimeCreated>
+
+<Query name="FindWindow">
+<Type>%Query</Type>
+<FormalSpec>indexGlobal:%String,minX:%Float,minY:%Float,maxX:%Float,maxY:%Float</FormalSpec>
+<Parameter name="ROWSPEC" value="Id"/>
+</Query>
+
+<Method name="FindWindowExecute">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[&qHandle:%Binary,indexGlobal:%String,minX:%Float,minY:%Float,maxX:%Float,maxY:%Float]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set qHandle("indexGlobal") = indexGlobal
+	do ..InternalFindWindow(.qHandle, minX, minY, maxX, maxY)
+	return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="FindWindowFetch">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[&qHandle:%Binary,&Row:%List,&AtEnd:%Boolean]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set index = $i(qHandle("index"))
+	set AtEnd = index>=qHandle("data")
+	set Row = $lb(qHandle("data", index))
+	return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="InternalFindWindow">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[&qHandle:%Binary,minX:%Float,minY:%Float,maxX:%Float,maxY:%Float,block:%String=##class(Indexer).#ROOTNODE]]></FormalSpec>
+<Implementation><![CDATA[
+	if (minX>maxX){
+		do ..InternalFindWindow(.qHandle, minX, minY, ##class(Indexer).#MAXX, maxY, block)
+		do ..InternalFindWindow(.qHandle, ##class(Indexer).#MINX, minY, maxX, maxY, block)
+		return
+	}
+	set indexGlobal = qHandle("indexGlobal")
+	#dim node as IndexNode = ##class(IndexNode).Get(indexGlobal, block)
+	if ((minX>=node.maxX) || (maxX<node.minX)) return
+	if ((minY>=node.maxY) || (maxY<node.minY)) return
+	if (node.isLeaf){
+		set x = ""
+		while ($$$YES){
+			set x = $o(@indexGlobal@(block, "data", x))
+			quit:x=""
+			if ((x<minX) || (x>=maxX)) continue
+			
+			set y = ""
+			while ($$$YES){
+				set y = $o(@indexGlobal@(block, "data", x, y))
+				quit:y=""
+				if ((y<minY) || (y>=maxY)) continue
+				
+				set id = $o(@indexGlobal@(block, "data", x, y, ""))
+				while (id'=""){
+					set index = $i(qHandle("data"))
+					set qHandle("data", index) = id
+					set id = $o(@indexGlobal@(block, "data", x, y, id))
+				}
+			}
+		}
+		return
+	}
+	for i=0:1:3 {
+		do ..InternalFindWindow(.qHandle, minX, minY, maxX, maxY, block_i)
+	}
+]]></Implementation>
+</Method>
+</Class>
+</Export>
