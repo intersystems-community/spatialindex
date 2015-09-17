@@ -28,7 +28,11 @@
 <Implementation><![CDATA[
 	do ..%KillExtent()
 	do $system.Process.SetZEOF(1)
-	open filename:"R"
+	open filename:"R":5
+	if '$Test {
+		write "cannot open ", filename,!
+		quit 
+	}
 	for  {
 		use filename read line
 		quit:$ZEOF=-1
@@ -54,8 +58,6 @@
 <IndexLocation>^SpatialIndex.TestI</IndexLocation>
 <StreamLocation>^SpatialIndex.TestS</StreamLocation>
 <Data name="TestDefaultData">
-<Structure>listnode</Structure>
-<Subscript/>
 <Value name="1">
 <Value>%%CLASSNAME</Value>
 </Value>
