@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2015.3 (Build 215U)" ts="2015-09-18 03:21:40">
+<Class name="SpatialIndex.DataParser">
+<Super>%RegisteredObject</Super>
+<TimeChanged>63813,11950.513682</TimeChanged>
+<TimeCreated>63813,11943.491744</TimeCreated>
+
+<Parameter name="fileName">
+<Default>E:\InterSystems\GeoNames\allCountries\allCountries.txt</Default>
+</Parameter>
+
+<Method name="ParseCountryFromFile">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	kill ^tmp
+	set st = $$$OK
+	//Set filename = "C:\My Documents\geoname\RU\cut.txt" 
+	Set filename = "E:\InterSystems\GeoNames\allCountries\allCountries.txt" 
+	Set stream=##class(%FileCharacterStream).%New() 
+	Set stream.Filename=filename
+	set indexer = ##class(SpatialIndex.Indexer).%New("^tmp(1)")
+	set i=0
+	set start=$ZHOROLOG
+	WHILE i<90000 { 
+	    Set line=stream.ReadLine() 
+	    If $Length(line) > 0 { 
+	    	set columnList = $ListFromString(line,"	")
+			
+			/*
+			for k=1:1:$LL(columnList)
+			{
+	    		w i_"-"_k_"............"_$List(columnList,k) ,!
+			}
+			*/
+
+	        set x=$List(columnList,5)
+	        set y=$List(columnList,6)
+	        set id=$List(columnList,1)
+	        set data=$List(columnList,2)
+			do indexer.Insert(x, y, id, data)
+	    }
+	    if i#1000=0 write "."
+	    if i#50000=0 write !
+	    set i=i+1
+	} 
+	set finish=$ZHOROLOG
+	
+	write !,"Success "_(finish-start) ,!
+	return st
+]]></Implementation>
+</Method>
+
+<Method name="GetFirstGlobLength">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set x = $order(^tmp(1,""))
+	set l=0
+	while (x'=""){
+		if ($LENGTH(x)>l) set l=$LENGTH(x)
+		set x = $order(^tmp(1,x))
+	}
+	write l
+]]></Implementation>
+</Method>
+</Class>
+</Export>
