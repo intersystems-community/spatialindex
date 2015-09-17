@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SpatialIndex.SQLResult">
+<Super>%SQL.AbstractFind</Super>
+<TimeCreated>63812,80595.195041</TimeCreated>
+
+<Property name="ResultBits">
+<MultiDimensional>1</MultiDimensional>
+<Private>1</Private>
+</Property>
+
+<Method name="%OnNew">
+<Private>1</Private>
+<ReturnType>%Status</ReturnType>
+<ServerOnly>1</ServerOnly>
+<Implementation><![CDATA[
+	kill i%ResultBits
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="PrepareFind">
+<FormalSpec>rect:%Binary</FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set str = ""
+	set $BIT(str,10 + 1) = 1
+	set $BIT(str,15 + 1) = 1
+	set $BIT(str,17 + 1) = 1
+	set i%ResultBits = 1
+	set i%ResultBits(1) = str
+	quit $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="ContainsItem">
+<FormalSpec>pItem:%String</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+	set tChunk = (pItem\64000)+1, tPos=(pItem#64000)+1
+	quit $bit($g(i%ResultBits(tChunk)),tPos)
+]]></Implementation>
+</Method>
+
+<Method name="GetChunk">
+<FormalSpec>pChunk:%Integer</FormalSpec>
+<ReturnType>%Binary</ReturnType>
+<Implementation><![CDATA[	quit $g(i%ResultBits(pChunk))
+]]></Implementation>
+</Method>
+
+<Method name="NextChunk">
+<FormalSpec><![CDATA[&pChunk:%Integer=""]]></FormalSpec>
+<ReturnType>%Binary</ReturnType>
+<Implementation><![CDATA[
+	set pChunk = $order(i%ResultBits(pChunk),1,tBits)
+	quit:pChunk="" ""
+	quit tBits
+]]></Implementation>
+</Method>
+
+<Method name="PreviousChunk">
+<FormalSpec><![CDATA[&pChunk:%Integer=""]]></FormalSpec>
+<ReturnType>%Binary</ReturnType>
+<Implementation><![CDATA[
+	set pChunk = $order(i%ResultBits(pChunk),-1,tBits)
+	quit:pChunk="" ""
+	quit tBits
+]]></Implementation>
+</Method>
+</Class>
+</Export>

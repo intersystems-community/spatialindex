@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Export generator="Cache" version="25" zv="Cache for Windows (x86-64) 2015.3 (Build 215U)" ts="2015-09-18 03:21:40">
+<Export generator="Cache" version="25">
 <Class name="SpatialIndex.DataParser">
 <Super>%RegisteredObject</Super>
-<TimeChanged>63813,11950.513682</TimeChanged>
 <TimeCreated>63813,11943.491744</TimeCreated>
 
 <Parameter name="fileName">

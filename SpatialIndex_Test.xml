@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SpatialIndex.Test">
+<Super>%Persistent</Super>
+<TimeCreated>63812,70763.114831</TimeCreated>
+
+<Property name="Name">
+<Type>%String</Type>
+<Parameter name="MAXLEN" value="300"/>
+</Property>
+
+<Property name="Latitude">
+<Type>%String</Type>
+</Property>
+
+<Property name="Longitude">
+<Type>%String</Type>
+</Property>
+
+<Index name="x1F">
+<Properties>Latitude,Longitude</Properties>
+<TypeClass>SpatialIndex.Index</TypeClass>
+</Index>
+
+<Method name="load">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>filename:%String="c:\temp\RUcut.txt"</FormalSpec>
+<Implementation><![CDATA[
+	do ..%KillExtent()
+	do $system.Process.SetZEOF(1)
+	open filename:"R"
+	for  {
+		use filename read line
+		quit:$ZEOF=-1
+		set columnList = $ListFromString(line,"	")
+		set p = ..%New()
+		set p.Name = $List(columnList, 2)
+		set p.Latitude=$List(columnList,5)
+	    set p.Longitude=$List(columnList,6)
+	    set ec = p.%Save()
+	    if 'ec {
+		    use $Principal zw ec
+	    }
+	}
+	close filename
+]]></Implementation>
+</Method>
+
+<Storage name="Default">
+<Type>%Library.CacheStorage</Type>
+<DataLocation>^SpatialIndex.TestD</DataLocation>
+<DefaultData>TestDefaultData</DefaultData>
+<IdLocation>^SpatialIndex.TestD</IdLocation>
+<IndexLocation>^SpatialIndex.TestI</IndexLocation>
+<StreamLocation>^SpatialIndex.TestS</StreamLocation>
+<Data name="TestDefaultData">
+<Value name="1">
+<Value>%%CLASSNAME</Value>
+</Value>
+<Value name="2">
+<Value>Name</Value>
+</Value>
+<Value name="3">
+<Value>X</Value>
+</Value>
+<Value name="4">
+<Value>Y</Value>
+</Value>
+<Value name="5">
+<Value>Latitude</Value>
+</Value>
+<Value name="6">
+<Value>Longitude</Value>
+</Value>
+</Data>
+</Storage>
+</Class>
+</Export>
