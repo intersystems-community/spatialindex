@@ -72,6 +72,32 @@
 ]]></Implementation>
 </Method>
 
+<Method name="Delete">
+<FormalSpec>x:%Float,y:%Float,id:%String,block:%String=..#ROOTNODE</FormalSpec>
+<Implementation><![CDATA[
+	#dim node As IndexNode
+	set node = ##class(IndexNode).Get(..indexGlobal, block)
+	if ('..IsInside(x, y, block)) return
+	if (node.isLeaf){
+		if ('..Contains(x, y, block)) {
+			//TODO: throw error
+			return
+		}
+		kill @..indexGlobal@(block, "data", x, y, id)
+		if ('..Contains(x, y, block)){
+			set node.size=node.size-1
+			do ##class(IndexNode).Put(..indexGlobal, block, node)
+		}
+		
+	}
+	else{
+		for i=0:1:3 {
+			do ..Delete(x, y, id, block_i)
+		}
+	}
+]]></Implementation>
+</Method>
+
 <Method name="IsInside">
 <FormalSpec>x:%Float,y:%Float,block:%String</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
