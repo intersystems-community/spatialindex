@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="SpatialIndex.UnitTest.SampleTest">
+<Super>%UnitTest.TestCase</Super>
+<TimeCreated>63813,3825.224102</TimeCreated>
+
+<Method name="TestSomething">
+<Implementation><![CDATA[
+	do $$$AssertEquals(2+2,4)
+	do $$$AssertStatusOK(1)
+]]></Implementation>
+</Method>
+</Class>
+</Export>
