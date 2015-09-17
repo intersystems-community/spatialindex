@@ -19,14 +19,18 @@
 This method is invoked when an existing instance of va class is deleted.</Description>
 <ClassMethod>1</ClassMethod>
 <CodeMode>generator</CodeMode>
-<FormalSpec>rect:%Binary</FormalSpec>
+<FormalSpec>queryType:%Binary,queryParams:%String</FormalSpec>
 <ReturnType>%Library.Binary</ReturnType>
 <SqlProc>1</SqlProc>
 <ServerOnly>1</ServerOnly>
 <Implementation><![CDATA[
-	$$$GENERATE($C(9)_"set result = ##class(SpatialIndex.SQLResult).%New()")
-	$$$GENERATE($C(9)_"do result.PrepareFind(rect)")
-	$$$GENERATE($C(9)_"quit result")
+	if %mode'="method" {
+		set IndexGlobal = ..IndexLocation(%class,%property)
+		set IndexGlobalQ = $$$QUOTE(IndexGlobal)
+		$$$GENERATE($C(9)_"set result = ##class(SpatialIndex.SQLResult).%New()")
+		$$$GENERATE($C(9)_"do result.PrepareFind($Name("_IndexGlobal_"), queryType, queryParams)")
+		$$$GENERATE($C(9)_"quit result")
+	}
 ]]></Implementation>
 </Method>
 
