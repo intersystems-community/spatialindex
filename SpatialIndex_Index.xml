@@ -2,11 +2,10 @@
 <Export generator="Cache" version="25">
 <Class name="SpatialIndex.Index">
 <Super>%Library.FunctionalIndex</Super>
+<System>3</System>
 <TimeCreated>63812,71450.004249</TimeCreated>
 
 <Method name="DeleteIndex">
-<Description>
-This method is invoked when an existing instance of a class is deleted.</Description>
 <ClassMethod>1</ClassMethod>
 <CodeMode>generator</CodeMode>
 <FormalSpec>pID:%CacheString,pArg...:%Binary</FormalSpec>
@@ -16,6 +15,8 @@ This method is invoked when an existing instance of a class is deleted.</Descrip
 </Method>
 
 <Method name="Find">
+<Description>
+This method is invoked when an existing instance of va class is deleted.</Description>
 <ClassMethod>1</ClassMethod>
 <CodeMode>generator</CodeMode>
 <FormalSpec>rect:%Binary</FormalSpec>
