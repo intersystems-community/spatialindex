@@ -24,7 +24,7 @@
 
 <Method name="load">
 <ClassMethod>1</ClassMethod>
-<FormalSpec>filename:%String="c:\temp\RUcut.txt"</FormalSpec>
+<FormalSpec>filename:%String="c:\temp\RUcut.txt",maxline:%Integer=1000000</FormalSpec>
 <Implementation><![CDATA[
 	do ..%KillExtent()
 	do $system.Process.SetZEOF(1)
@@ -33,7 +33,7 @@
 		write "cannot open ", filename,!
 		quit 
 	}
-	for  {
+	for i=1:1:maxline{
 		use filename read line
 		quit:$ZEOF=-1
 		set columnList = $ListFromString(line,"	")

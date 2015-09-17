@@ -5,7 +5,7 @@
 <TimeCreated>63812,81607.191685</TimeCreated>
 
 <Parameter name="NODESIZE">
-<Default>4</Default>
+<Default>100</Default>
 </Parameter>
 
 <Parameter name="ROOTNODE">
@@ -51,18 +51,17 @@
 </Method>
 
 <Method name="Insert">
-<FormalSpec>x:%Float,y:%Float,id:%String,data:%String="",block:%String=..#ROOTNODE</FormalSpec>
+<FormalSpec>x:%Float,y:%Float,id:%String,data:%String="",block:%String=..#ROOTNODE,node:IndexNode=""</FormalSpec>
 <Implementation><![CDATA[
-	#dim node As IndexNode
-	set node = ##class(IndexNode).Get(..indexGlobal, block)
-	if ('..IsInside(x, y, block)) return
+	set:node="" node = ##class(IndexNode).Get(..indexGlobal, block)
+	if ('..IsInside(x, y, node)) return
 	if (node.isLeaf){
-		if ('..Contains(x, y, block)) {
+		if ('..LeafContains(x, y, block)) {
 			set node.size = node.size + 1
 			do ##class(IndexNode).Put(..indexGlobal, block, node)
 		}
 		set @..indexGlobal@(block, "data", x, y, id) = data
-		if (node.size > ..#NODESIZE) do ..Split(block)
+		if (node.size > ..#NODESIZE) do ..Split(block, node)
 	}
 	else{
 		for i=0:1:3 {
@@ -77,14 +76,14 @@
 <Implementation><![CDATA[
 	#dim node As IndexNode
 	set node = ##class(IndexNode).Get(..indexGlobal, block)
-	if ('..IsInside(x, y, block)) return
+	if ('..IsInside(x, y, node)) return
 	if (node.isLeaf){
-		if ('..Contains(x, y, block)) {
+		if ('..LeafContains(x, y, block)) {
 			//TODO: throw error
 			return
 		}
 		kill @..indexGlobal@(block, "data", x, y, id)
-		if ('..Contains(x, y, block)){
+		if ('..LeafContains(x, y, block)){
 			set node.size=node.size-1
 			do ##class(IndexNode).Put(..indexGlobal, block, node)
 		}
@@ -99,37 +98,22 @@
 </Method>
 
 <Method name="IsInside">
-<FormalSpec>x:%Float,y:%Float,block:%String</FormalSpec>
+<FormalSpec>x:%Float,y:%Float,node:IndexNode</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
-<Implementation><![CDATA[
-	#dim node As IndexNode
-	set node = ##class(IndexNode).Get(..indexGlobal, block)
-	return (x>=node.minX) && (x<node.maxX) && (y>=node.minY) && (y<node.maxY)
+<Implementation><![CDATA[	return (x>=node.minX) && (x<node.maxX) && (y>=node.minY) && (y<node.maxY)
 ]]></Implementation>
 </Method>
 
-<Method name="Contains">
-<FormalSpec>x:%Float,y:%Float,block:%String=..#ROOTNODE</FormalSpec>
+<Method name="LeafContains">
+<FormalSpec>x:%Float,y:%Float,block:%String</FormalSpec>
 <ReturnType>%Boolean</ReturnType>
-<Implementation><![CDATA[
-	#dim node As IndexNode
-	set node = ##class(IndexNode).Get(..indexGlobal, block)
-	if ('..IsInside(x, y, block)) return $$$NO
-	if (node.isLeaf){
-		return $DATA(@..indexGlobal@(block, "data", x, y))>0
-	}
-	for i=0:1:3 {
-		if (..Contains(x, y, block_i)) return $$$YES
-	}
-	return $$$NO
+<Implementation><![CDATA[	return $DATA(@..indexGlobal@(block, "data", x, y))>0
 ]]></Implementation>
 </Method>
 
 <Method name="Split">
-<FormalSpec>block:%String</FormalSpec>
+<FormalSpec>block:%String,node:IndexNode</FormalSpec>
 <Implementation><![CDATA[
-	#dim node As IndexNode
-	set node = ##class(IndexNode).Get(..indexGlobal, block)
 	set midX = (node.minX+node.maxX)/2
 	set midY = (node.minY+node.maxY)/2
 	
@@ -154,7 +138,7 @@
 		while (y'=""){
 			set id = $o(@..indexGlobal@(block, "data", x, y, ""))
 			while (id'=""){
-				do ..Insert(x, y, id, @..indexGlobal@(block, "data", x, y, id), block)
+				do ..Insert(x, y, id, @..indexGlobal@(block, "data", x, y, id), block, node)
 				set id = $o(@..indexGlobal@(block, "data", x, y, id))
 			}
 			set y = $o(@..indexGlobal@(block, "data", x, y))
