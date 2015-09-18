@@ -15,6 +15,7 @@
 <ServerOnly>1</ServerOnly>
 <Implementation><![CDATA[
 	kill i%ResultBits
+	kill qHandle
 	quit $$$OK
 ]]></Implementation>
 </Method>
@@ -38,9 +39,9 @@
 	 	do ##class(SpatialIndex.QueryExecutor).InternalFindWindow(.qHandle,arg("minx"),arg("miny"),arg("maxx"),arg("maxy"))
 	 	set id = ""
 	 	for  {
-		 	set id = $O(qHandle("data", id))
+		 	set id = $O(qHandle("data", id),1,idd)
 		 	quit:id=""
-	 		set tChunk = (id\64000)+1, tPos=(id#64000)+1
+	 		set tChunk = (idd\64000)+1, tPos=(idd#64000)+1
 	 		set $BIT(i%ResultBits(tChunk),tPos) = 1
 	 	}
 	}elseif queryType = "radius" {
@@ -57,14 +58,14 @@
 			set arg(param) = value
 		}
 		set qHandle("indexGlobal") = indexGlobal
-		set arg("radiusX") = $G(arg("radiusX"),arg("radius"))
-		set arg("radiusY") = $G(arg("radiusY"),arg("radius"))
+		set:'$D(arg("radiusX")) arg("radiusX") = arg("radius")
+		set:'$D(arg("radiusY")) arg("radiusY") = arg("radius")
 	 	do ##class(SpatialIndex.QueryExecutor).InternalFindRadius(.qHandle,arg("x"),arg("y"),arg("radiusX"),arg("radiusY"))
 	 	set id = ""
 	 	for  {
-		 	set id = $O(qHandle("data", id))
+		 	set id = $O(qHandle("data", id),1,idd)
 		 	quit:id=""
-	 		set tChunk = (id\64000)+1, tPos=(id#64000)+1
+	 		set tChunk = (idd\64000)+1, tPos=(idd#64000)+1
 	 		set $BIT(i%ResultBits(tChunk),tPos) = 1
 	 	}
 	}
