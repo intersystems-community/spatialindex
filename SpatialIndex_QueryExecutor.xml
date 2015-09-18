@@ -74,5 +74,90 @@
 	}
 ]]></Implementation>
 </Method>
+
+<Query name="FindRadius">
+<Type>%Query</Type>
+<FormalSpec>indexGlobal:%String,cX:%Float,cY:%Float,radiusX:%Float,radiusY:%Float</FormalSpec>
+<Parameter name="ROWSPEC" value="Id"/>
+</Query>
+
+<Method name="FindRadiusExecute">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[&qHandle:%Binary,indexGlobal:%String,cX:%Float,cY:%Float,radiusX:%Float,radiusY:%Float]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set qHandle("indexGlobal") = indexGlobal
+	do ..InternalFindRadius(.qHandle, cX, cY, radiusX, radiusY)
+	return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="FindRadiusFetch">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[&qHandle:%Binary,&Row:%List,&AtEnd:%Boolean]]></FormalSpec>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	set index = $i(qHandle("index"))
+	set AtEnd = index>=$G(qHandle("data"))
+	set Row = $lb(qHandle("data", index))
+	return $$$OK
+]]></Implementation>
+</Method>
+
+<Method name="InternalFindRadius">
+<ClassMethod>1</ClassMethod>
+<FormalSpec><![CDATA[&qHandle:%Binary,cX:%Float,cY:%Float,radiusX:%Float,radiusY:%Float,block:%String=##class(Indexer).#ROOTNODE]]></FormalSpec>
+<Implementation><![CDATA[
+	set indexGlobal = qHandle("indexGlobal")
+	#dim node as IndexNode = ##class(IndexNode).Get(indexGlobal, block)
+	set intersect = $$$NO
+	if ((cX+radiusX>=node.minX) && (cX-radiusX<node.maxX) && (cY>=node.minY) && (cY<node.maxY)) set intersect = $$$YES
+	if ((cX>=node.minX) && (cX<node.maxX) && (cY+radiusY>=node.minY) && (cY-radiusY<node.maxY)) set intersect = $$$YES
+	if (..IsInEllipse(cX, cY, radiusX, radiusY, node.minX, node.minY)) set intersect = $$$YES
+	if (..IsInEllipse(cX, cY, radiusX, radiusY, node.minX, node.maxY)) set intersect = $$$YES
+	if (..IsInEllipse(cX, cY, radiusX, radiusY, node.maxX, node.minY)) set intersect = $$$YES
+	if (..IsInEllipse(cX, cY, radiusX, radiusY, node.maxX, node.maxY)) set intersect = $$$YES
+	if ('intersect) return
+	if (node.isLeaf){
+		set x = ""
+		while ($$$YES){
+			set x = $o(@indexGlobal@(block, "data", x))
+			quit:x=""
+			if ((x<cX-radiusX) || (x>=cX+radiusX)) continue
+			
+			set y = ""
+			while ($$$YES){
+				set y = $o(@indexGlobal@(block, "data", x, y))
+				quit:y=""
+				if ((y<cY-radiusY) || (y>=cY+radiusY)) continue
+				
+				set id = ""
+				while ($$$YES){
+					set id = $o(@indexGlobal@(block, "data", x, y, id))
+					quit:id=""
+					if ('..IsInEllipse(cX, cY, radiusX, radiusY, x, y)) continue
+					set index = $i(qHandle("data"))
+					set qHandle("data", index) = id
+				}
+			}
+		}
+		return
+	}
+	for i=0:1:3 {
+		do ..InternalFindWindow(.qHandle, cX, cY, radiusX, radiusY, block_i)
+	}
+]]></Implementation>
+</Method>
+
+<Method name="IsInEllipse">
+<ClassMethod>1</ClassMethod>
+<FormalSpec>cX:%Float,cY:%Float,radiusX:%Float,radiusY:%Float,x:%Float,y:%Float</FormalSpec>
+<ReturnType>%Boolean</ReturnType>
+<Implementation><![CDATA[
+		set x = (x-cX)/radiusX
+		set y = (y-cY)/radiusY
+		return (x*x)+(y*y)<=1
+]]></Implementation>
+</Method>
 </Class>
 </Export>
