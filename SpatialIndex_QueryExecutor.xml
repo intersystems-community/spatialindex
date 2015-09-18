@@ -111,8 +111,8 @@
 	set indexGlobal = qHandle("indexGlobal")
 	#dim node as IndexNode = ##class(IndexNode).Get(indexGlobal, block)
 	set intersect = $$$NO
-	if ((cX+radiusX>=node.minX) && (cX-radiusX<node.maxX) && (cY>=node.minY) && (cY<node.maxY)) set intersect = $$$YES
-	if ((cX>=node.minX) && (cX<node.maxX) && (cY+radiusY>=node.minY) && (cY-radiusY<node.maxY)) set intersect = $$$YES
+	if (((cX+radiusX)>=node.minX) && ((cX-radiusX)<node.maxX) && (cY>=node.minY) && (cY<node.maxY)) set intersect = $$$YES
+	if ((cX>=node.minX) && (cX<node.maxX) && ((cY+radiusY)>=node.minY) && ((cY-radiusY)<node.maxY)) set intersect = $$$YES
 	if (..IsInEllipse(cX, cY, radiusX, radiusY, node.minX, node.minY)) set intersect = $$$YES
 	if (..IsInEllipse(cX, cY, radiusX, radiusY, node.minX, node.maxY)) set intersect = $$$YES
 	if (..IsInEllipse(cX, cY, radiusX, radiusY, node.maxX, node.minY)) set intersect = $$$YES
@@ -123,13 +123,13 @@
 		while ($$$YES){
 			set x = $o(@indexGlobal@(block, "data", x))
 			quit:x=""
-			if ((x<cX-radiusX) || (x>=cX+radiusX)) continue
+			if ((x<(cX-radiusX)) || (x>=(cX+radiusX))) continue
 			
 			set y = ""
 			while ($$$YES){
 				set y = $o(@indexGlobal@(block, "data", x, y))
 				quit:y=""
-				if ((y<cY-radiusY) || (y>=cY+radiusY)) continue
+				if ((y<(cY-radiusY)) || (y>=(cY+radiusY))) continue
 				
 				set id = ""
 				while ($$$YES){
@@ -144,7 +144,7 @@
 		return
 	}
 	for i=0:1:3 {
-		do ..InternalFindWindow(.qHandle, cX, cY, radiusX, radiusY, block_i)
+		do ..InternalFindRadius(.qHandle, cX, cY, radiusX, radiusY, block_i)
 	}
 ]]></Implementation>
 </Method>
