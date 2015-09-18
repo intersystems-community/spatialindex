@@ -28,24 +28,22 @@
 		set item = $Piece(queryParams, ",", i)
 		set param = $Piece(item, "=", 1)
 		set value = $Piece(item, "=" ,2)
-		if param = "minx" {
-			set minx = value
-		} elseif param = "maxx" {
-			set maxx = value
-		} elseif param = "maxy"{
-			set maxy = value
-		} elseif param = "miny" {
-			set miny = value
-		}
+		set arg(param) = value
 	}
-	set rset = ##class(%ResultSet).%New("SpatialIndex.QueryExecutor:FindWindow")
- 	do rset.Execute(indexGlobal,minx,miny,maxx,maxy)
- 	while (rset.Next()){
-	 	set id = rset.Get("Id")
-	 	set tChunk = (id\64000)+1, tPos=(id#64000)+1
-	 	set $BIT(i%ResultBits(tChunk),tPos) = 1
-	}
-	quit $$$OK
+	//set rset = ##class(%ResultSet).%New("SpatialIndex.QueryExecutor:FindWindow")
+ 	//do rset.Execute(indexGlobal,arg("minx"),arg("miny"),arg("maxx"),arg("maxy"))
+ 	//while (rset.Next()){
+	 //	set id = rset.Get("Id")
+	 	set qHandle("indexGlobal") = indexGlobal
+	 	do ##class(SpatialIndex.QueryExecutor).InternalFindWindow(.qHandle,arg("minx"),arg("miny"),arg("maxx"),arg("maxy"))
+	 	set id = ""
+	 	for  {
+		 	set id = $O(qHandle("data", id))
+		 	quit:id=""
+	 		set tChunk = (id\64000)+1, tPos=(id#64000)+1
+	 		set $BIT(i%ResultBits(tChunk),tPos) = 1
+	 	}
+	 	quit $$$OK
 ]]></Implementation>
 </Method>
 
