@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="csp/maps/js/services/SessionSrvc.js" application="/csp/test/" default="1"><![CDATA[
+'use strict';
+
+// Session service
+function SessionSrvc(RESTSrvc) {    
+  return {
+    // save worklist object
+    logout: 
+      function(baseAuthToken) {
+        return RESTSrvc.getPromise( {method: 'GET', url: RESTWebApp.appName + '/logout', headers: {'Authorization' : baseAuthToken} });
+      }
+  }
+};
+
+// resolving minification problems
+SessionSrvc.$inject = ['RESTSrvc'];
+servicesModule.factory('SessionSrvc', SessionSrvc);
+]]></CSP>
+</Export>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="csp/maps/js/controllers/AllTopicCtrl.js" application="/csp/test/" default="1"><![CDATA[
+'use strict';
+
+function AllTopicCtrl($scope, $sce, $log, $location, $cookies, ForumSrvc, SessionSrvc, UtilSrvc) {
+	$scope.page = {};
+	$scope.topicCount=0;
+	//$scope.$parent.specTheme = "";
+	//Тест для пагинации
+	$scope.filteredTodos = [];
+	$scope.currentPage=1;
+	$scope.itemsPerPage=1;
+	$scope.maxSize = 5;
+	$scope.todos = [];
+	$scope.bigCurrentPage = 1;
+	
+	
+	$scope.pageChenged = function(currentPage){
+		ForumSrvc.getTopicOnPage(currentPage).then(
+			function(data) {
+				$scope.page.loadSuccess(data); 
+			});
+	}	
+		
+	$scope.page.getTopicCount = function() {    
+		ForumSrvc.getCountTopicOnPage().then(
+		function(data) {
+			var todos = [];
+			for (var i=1;i<=data.topicCount;i++) {
+				todos.push({ text:'page '+i, done:false});
+			}
+			$scope.page.setTodos(todos)
+		});
+	};
+  	//Конец теста для пагинации
+  	
+	$scope.page.dataInit = function() {
+		$scope.page.getTopicCount();     
+		ForumSrvc.getTopicOnPage(1).then(
+			function(data) {
+				$scope.page.loadSuccess(data); 
+			});
+	};
+	
+	$scope.page.grid = {
+		caption: 'Темы',
+		cssClass:'table table-condensed table-bordered table-hover',
+		columns: [{name: 'Тип', property: 'Type'},
+				  {name: 'Тема', property: 'Name'},
+				  {name: 'Автор', property: 'Author'},
+				  {name: 'Ответов', property: 'Answers'},
+				  {name: 'Просмотров', property: 'Views'},
+				  {name: 'Дата', property: 'Updated'},
+				  ]
+	};
+ 
+
+ 
+    //Переход на страницу темы
+    $scope.page.openTopic = function(topicId){
+        $location.path('/topic/'+topicId);
+    };
+        
+    //Переход на страницу создания темы
+    $scope.page.addTopic = function(){
+        $location.path('/addtopic');
+    };
+    
+    //Отображение данных Тем при успешной загрузке
+ 	$scope.page.loadSuccess = function(data) {
+	   	$scope.page.grid.items = data.children; 
+ 	};
+ 	
+ 	$scope.page.setTodos = function(data) {
+		$scope.todos=data;
+	};
+ 	
+ 	//Отображение данных Тем при успешной загрузке
+ 	$scope.page.imgFilter = function(type) {
+	   	switch (type) {
+		   case "message":
+		      return "fa fa-envelope"
+		      break
+		   case "question":
+		      return "fa fa-question-circle"
+		      break
+		   case "happy":
+		      return "fa fa-smile-o"
+		      break
+		   case "cry":
+		      return "fa fa-frown-o"
+		      break
+		   case "exclamation":
+		      return "fa fa-exclamation"
+		      break   
+		   default:
+		      return "fa fa-envelope"
+		      break
+		}
+ 	};
+ 	
+ 	$scope.page.dataInit();
+}
+
+// resolving minification problems
+AllTopicCtrl.$inject = ['$scope', '$sce', '$log', '$location', '$cookies', 'ForumSrvc', 'SessionSrvc', 'UtilSrvc'];
+controllersModule.controller('AllTopicCtrl', AllTopicCtrl);
+]]></CSP>
+</Export>

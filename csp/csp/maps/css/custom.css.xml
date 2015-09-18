@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="csp/maps/css/custom.css" application="/csp/test/" default="1"><![CDATA[
+html {
+  height: 100%;
+}
+
+#gmaps {
+    width: 800px;
+    height: 700px;
+}
+
+body {
+  min-height: 100%;
+}
+
+textarea {
+   resize: none;
+}
+
+@media(max-width:767px) {
+  /* compensate fixed navbar height */
+  body {
+    padding-top: 289px;
+  }
+  
+  .alert {
+    display: block;
+  }
+  
+  .navbar-form {  
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }  
+  
+  .form-control {
+    margin-top: 5px !important;
+    margin-bottom: 5px !important;
+  }
+}
+
+@media(min-width:768px) {
+  body {
+    padding-top: 107px;
+  }
+  
+  .alert {
+    margin-right: 10px;
+    display: inline-block;
+  }
+}
+
+@media(min-width:992px) {
+    body {
+    padding-top: 67px;
+  }
+}
+/*
+@media(min-width:992px){}
+
+@media(min-width:1200px){}
+*/
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+/* fix modal backdrop in bootstrap 3.3+ */
+.modal-backdrop {
+  bottom: 0;
+}
+
+.attention {
+  font-size: 3em;
+  color: #AAA;
+  text-align: center;
+  margin-top: 200px;
+}
+
+.form-control {
+   cursor: default !important;
+}
+
+.top-buffer { 
+  margin-top: 15px; 
+}
+
+.el-centered {
+  float: none;
+  margin: 0 auto;
+}
+
+.uc-inline {
+  width:auto; display:inline;
+}
+
+.progress-condensed {
+  height: 15px !important;  
+  font-size: 11px !important;
+  line-height: 15px !important;
+}
+
+.delimeter {
+  height: 1px;
+  background: #ccc;
+  border-bottom:1px solid #bbb;
+  margin: 10px auto;
+}
+
+
+/* custom buttons */
+
+div.button {
+  display: inline-block;
+  border-radius: 2px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  line-height: 24px;
+  width: 24px;
+  height: 24px;
+  color: #fff;
+  cursor: pointer;
+}
+
+div.button-success {
+  background: #60d67b;
+}
+
+div.button-success:hover {
+  background: #54c46e;
+}
+
+div.button-danger {
+  background: #ed0707;
+}
+
+div.button-danger:hover {
+  background: #ca3b37;
+}
+
+div.button-info {
+  background: #2076c1;
+}
+
+div.button-info:hover {
+  background: #2a6395;
+}
+
+/* table styles */
+
+.table-tasks {
+   font-size: 13px;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;  
+}
+
+.table-tasks caption {
+  padding-bottom: 5px; 
+}
+
+.table-tasks tr {
+  transition: background 0.6s ease;
+  -webkit-transition: background 0.6s ease;
+  vertical-align: middle !important;
+
+}
+
+.table-tasks>tbody tr:hover {
+  transition: background 0.1s ease-out;
+  -webkit-transition: background 0.1s ease-out;
+}
+
+.table-tasks>thead th:hover {
+   background: #efefef !important;
+}
+
+.table-tasks>tbody>tr>td, .table-tasks>tfoot>tr>td {
+  padding: 3px !important;
+  vertical-align: middle !important;
+  transition: background 0.7s ease;
+  -webkit-transition: background 0.7s ease;
+
+}
+
+.table-tasks>tbody>tr>td:last-child {
+  min-width: 60px;
+}
+
+/* alert styles */
+
+.alert {
+  position: relative;
+  opacity: 0.7; 
+  cursor: pointer;
+  min-width: 250px;
+  margin-bottom: 10px !important;
+}
+
+.alert:hover { 
+  opacity: 1; 
+}
+.navbar-custom {
+  background-color: #337ab7;
+  border-color: #e7e7e7;
+}
+.navbar-custom .navbar-brand {
+  color: #fff;
+}
+.navbar-custom .navbar-brand:hover,
+.navbar-custom .navbar-brand:focus {
+  color: #eee;
+  background-color: transparent;
+}
+.navbar-custom .navbar-text {
+  color: #777;
+}
+.navbar-custom .navbar-nav > li > a {
+  color: #777;
+}
+.navbar-custom .navbar-nav > li > a:hover,
+.navbar-custom .navbar-nav > li > a:focus {
+  color: #eee;
+  background-color: transparent;
+}
+.navbar-custom .navbar-nav > .active > a,
+.navbar-custom .navbar-nav > .active > a:hover,
+.navbar-custom .navbar-nav > .active > a:focus {
+  color: #eee;
+  background-color: #0a31b1;
+}
+.navbar-custom .navbar-nav > .disabled > a,
+.navbar-custom .navbar-nav > .disabled > a:hover,
+.navbar-custom .navbar-nav > .disabled > a:focus {
+  color: #ccc;
+  background-color: transparent;
+}
+.navbar-custom .navbar-toggle {
+  border-color: #ddd;
+}
+.navbar-custom .navbar-toggle:hover,
+.navbar-custom .navbar-toggle:focus {
+  background-color: #ddd;
+}
+.navbar-custom .navbar-toggle .icon-bar {
+  background-color: #0a31b1;
+}
+.navbar-custom .navbar-collapse,
+.navbar-custom .navbar-form {
+  border-color: #0a31b1;
+}
+.navbar-custom .navbar-nav > .open > a,
+.navbar-custom .navbar-nav > .open > a:hover,
+.navbar-custom .navbar-nav > .open > a:focus {
+  color: #555;
+  background-color: #0a31b1;
+}
+@media (max-width: 767px) {
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a {
+    color: #777;
+  }
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #333;
+    background-color: transparent;
+  }
+  .navbar-custom .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #555;
+    background-color: #0a31b1;
+  }
+  .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+  .navbar-custom .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+    color: #ccc;
+    background-color: transparent;
+  }
+}
+.navbar-custom .navbar-link {
+  color: #777;
+}
+.navbar-custom .navbar-link:hover {
+  color: #333;
+}
+.navbar-custom .btn-link {
+  color: #777;
+}
+.navbar-custom .btn-link:hover,
+.navbar-custom .btn-link:focus {
+  color: #333;
+}
+.navbar-custom .btn-link[disabled]:hover,
+fieldset[disabled] .navbar-custom .btn-link:hover,
+.navbar-custom .btn-link[disabled]:focus,
+fieldset[disabled] .navbar-custom .btn-link:focus {
+  color: #ccc;
+}
+]]></CSP>
+</Export>

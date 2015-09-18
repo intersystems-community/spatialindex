@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<CSP name="csp/maps/js/app.js" application="/csp/test/" default="1"><![CDATA[
+'use strict';
+
+var servicesModule    = angular.module('servicesModule',[]);
+var controllersModule = angular.module('controllersModule', []);
+var directivesModule  = angular.module('directivesModule', []);
+var app = angular.module('app', ['ngRoute', 'ngCookies', 'ui.bootstrap', 'servicesModule', 'controllersModule', 'directivesModule']);
+
+app.config([ '$routeProvider', function( $routeProvider ) {
+
+}]);
+ ]]></CSP>
+</Export>
