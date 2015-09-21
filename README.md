@@ -9,7 +9,7 @@ See sample class SpatialIndex.Test
 
 Then you can query table with defined index.
 Two types of queries are implemented:
-window (rectangle) and radius (ellips).
+window (rectangle) and radius (ellipse).
 
 For example:
 
