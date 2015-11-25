@@ -1,2 +1,1 @@
-<cspapp>/csp
 SpatialIndex.pkg
