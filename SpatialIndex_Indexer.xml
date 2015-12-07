@@ -43,8 +43,8 @@
 <Implementation><![CDATA[
 	set ..indexGlobal = indexGlobal
 	if ('##class(IndexNode).Exists(indexGlobal, ..#ROOTNODE)){
-		do ##class(IndexNode).Put(indexGlobal, ..#ROOTNODE,
-			{"isLeaf":$$$YES, "minX":..#MINX, "maxX":..#MAXX, "minY":..#MINY, "maxY":..#MAXY, "size":0})
+		set node = ##class(IndexNode).%New(..#MINX,..#MINY,..#MAXX,..#MAXY, $$$YES, 0)
+		do ##class(IndexNode).Put(indexGlobal, ..#ROOTNODE, node)
 	}
 	return $$$OK
 ]]></Implementation>
