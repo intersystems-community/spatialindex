@@ -17,7 +17,7 @@
 <Type>%String</Type>
 </Property>
 
-<Index name="x1F">
+<Index name="coord">
 <Properties>Latitude,Longitude</Properties>
 <TypeClass>SpatialIndex.Index</TypeClass>
 </Index>
