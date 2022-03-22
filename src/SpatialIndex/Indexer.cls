@@ -22,7 +22,7 @@ Method %OnNew(indexGlobal As %String) As %Status
 	set ..indexGlobal = indexGlobal
 	if ('##class(IndexNode).Exists(indexGlobal, ..#ROOTNODE)){
 		do ##class(IndexNode).Put(indexGlobal, ..#ROOTNODE,
-			{"isLeaf":$$$YES, "minX":..#MINX, "maxX":..#MAXX, "minY":..#MINY, "maxY":..#MAXY, "size":0})
+			{"isLeaf":($$$YES), "minX":(..#MINX), "maxX":(..#MAXX), "minY":(..#MINY), "maxY":(..#MAXY), "size":0})
 	}
 	return $$$OK
 }

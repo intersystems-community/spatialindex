@@ -1,4 +1,4 @@
-#How to use
+# How to use
 
 Import SpatialIndex package.
 Define index in class as follows (you can use any index, properties name):
@@ -6,6 +6,10 @@ Define index in class as follows (you can use any index, properties name):
 `Index x1f on (Latitude,Longitude) As SpatialIndex.Index;`
 
 See sample class SpatialIndex.Test
+
+Load data with
+
+   do ##class(SpatialIndex.Test).load("/tmp/Rucut.txt")
 
 Then you can query table with defined index.
 Two types of queries are implemented:
