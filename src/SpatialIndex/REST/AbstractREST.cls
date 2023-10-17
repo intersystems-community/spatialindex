@@ -241,7 +241,8 @@ ClassMethod CheckNamespace(ByRef Namespace As %String = {$Namespace}) As %Status
 }
 
 /// This project creates the DispatchMethod used to dispatch the Url and Method to the associated target method
-ClassMethod DispatchMap(pIndex As %Integer) As %String [ CodeMode = generator ]
+// ClassMethod DispatchMap(pIndex As %Integer) As %String [ CodeMode = generator ]  !! compilation fails in IRIS 
+ClassMethod DispatchMap(pIndex As %String) As %String [ CodeMode = generator ]
 {
     #dim tSC As %Status = $$$OK
     #dim e As %Exception.AbstractException
